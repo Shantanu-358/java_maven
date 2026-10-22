@@ -1,0 +1,23 @@
+[Unit]
+Description=Cloud Demo Java Spring Boot Application
+After=syslog.target network.target
+
+[Service]
+# On Amazon Linux use: ec2-user, on Ubuntu use: ubuntu
+User=ec2-user
+WorkingDirectory=/opt/cloud-demo
+
+# Memory-restricted flags tailored for Free Tier (1GB RAM)
+ExecStart=/usr/bin/java -Xms128m -Xmx256m -XX:+UseSerialGC -Dspring.profiles.active=prod -jar /opt/cloud-demo/app.jar
+
+SuccessExitStatus=143
+TimeoutStopSec=20
+Restart=always
+RestartSec=10
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloud-demo-app
+
+[Install]
+WantedBy=multi-user.target
