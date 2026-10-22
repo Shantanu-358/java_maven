@@ -47,10 +47,10 @@ systemctl enable "$SERVICE_NAME"
 systemctl start "$SERVICE_NAME"
 
 # Health check verification
-echo "==> Waiting for application to report healthy on port 8080..."
+echo "==> Waiting for application to report healthy on port 80..."
 MAX_ATTEMPTS=20
 ATTEMPT=1
-HEALTH_URL="http://localhost:8080/api/health"
+HEALTH_URL="http://localhost:80/api/health"
 
 until curl -s -f "$HEALTH_URL" > /dev/null || [ $ATTEMPT -gt $MAX_ATTEMPTS ]; do
     echo "Checking health ($ATTEMPT/$MAX_ATTEMPTS)... waiting 3s"
@@ -67,3 +67,4 @@ fi
 echo "=========================================="
 echo "Deployment successful! Service is LIVE."
 echo "=========================================="
+

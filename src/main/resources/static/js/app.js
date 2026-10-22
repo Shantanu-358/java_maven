@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             httpStatus.style.color = '#ef4444';
             jsonOutput.textContent = JSON.stringify({
                 error: err.message,
-                hint: 'Ensure application is running on port 8080 and security group allows inbound traffic.'
+                hint: 'Ensure application is running on port 80 and security group allows inbound traffic.'
             }, null, 2);
             return null;
         }
@@ -86,3 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Refresh every 30 seconds
     setInterval(loadStatus, 30000);
 });
+

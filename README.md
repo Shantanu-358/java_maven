@@ -9,7 +9,7 @@ A lightweight, production-ready Java Spring Boot application optimized for **AWS
 - **Framework**: Spring Boot 3.2.x (Java 17)
 - **Packaging**: Executable Fat JAR (`target/app.jar`)
 - **Key Features**:
-  - Live Web Dashboard at `http://<EC2-IP>:8080/` with modern dark mode & glassmorphism UI.
+  - Live Web Dashboard at `http://<EC2-IP>/` with modern dark mode & glassmorphism UI.
   - REST Endpoints:
     - `GET /api/status`: Real-time JVM memory stats, instance hostname, OS details, and uptime.
     - `GET /api/health`: JSON health check endpoint.
@@ -168,5 +168,6 @@ In the AWS EC2 Management Console, edit **Inbound Rules** for your instance's Se
 4. **Verify Service**:
    ```bash
    systemctl status app.service
-   curl http://localhost:8080/api/health
+   curl http://localhost/api/health
    ```
+
