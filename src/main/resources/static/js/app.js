@@ -7,12 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const ramProgress = document.getElementById('ram-progress');
     const ramSub = document.getElementById('ram-sub');
     const metricUptime = document.getElementById('metric-uptime');
-    const metricTime = document.getElementById('metric-time');
+    const metricLatency = document.getElementById('metric-latency');
     const currentEndpoint = document.getElementById('current-endpoint');
     const httpStatus = document.getElementById('http-status');
     const jsonOutput = document.getElementById('json-output');
     const btnRefresh = document.getElementById('btn-refresh-all');
     const apiButtons = document.querySelectorAll('.api-btn');
+    const nameInput = document.getElementById('name-input');
+    const btnCustomGreet = document.getElementById('btn-custom-greet');
+    const greetingAlert = document.getElementById('greeting-alert');
+    const greetingMessage = document.getElementById('greeting-message');
 
     async function fetchEndpoint(url, method = 'GET') {
         currentEndpoint.textContent = `${method} ${url}`;
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             httpStatus.textContent = `${response.status} ${response.statusText} (${duration}ms)`;
             httpStatus.style.color = response.ok ? '#10b981' : '#ef4444';
             jsonOutput.textContent = JSON.stringify(data, null, 2);
+            if (metricLatency) metricLatency.textContent = `Ping: ${duration}ms`;
             return data;
         } catch (err) {
             httpStatus.textContent = 'Request Failed';
@@ -37,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 error: err.message,
                 hint: 'Ensure application is running on port 80 and security group allows inbound traffic.'
             }, null, 2);
+            if (metricLatency) metricLatency.textContent = 'Ping: Error';
             return null;
         }
     }
@@ -44,14 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadStatus() {
         const data = await fetchEndpoint('/api/status');
         if (data && data.status !== 'error') {
-            statusText.textContent = 'Server Online';
+            statusText.textContent = 'Server Online (v2.0)';
+            if (data.environment && metricEnv) metricEnv.textContent = data.environment;
             if (data.hostname) metricHost.textContent = data.hostname;
             if (data.os) metricOs.textContent = `${data.os} (Java ${data.javaVersion || ''})`;
             if (data.uptime) metricUptime.textContent = data.uptime;
-            if (data.timestamp) {
-                const date = new Date(data.timestamp);
-                metricTime.textContent = date.toLocaleTimeString();
-            }
 
             if (data.jvmMemory) {
                 const used = data.jvmMemory.usedMb || 0;
@@ -63,6 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 ramSub.textContent = `Max Allocated: ${max} MB (${percentage}%)`;
             }
         }
+    }
+
+    // Custom Greeting Click
+    if (btnCustomGreet) {
+        btnCustomGreet.addEventListener('click', async () => {
+            const name = encodeURIComponent(nameInput.value.trim() || 'DevOps Engineer');
+            const data = await fetchEndpoint(`/api/greet?name=${name}`);
+            if (data && data.message) {
+                greetingMessage.textContent = data.message;
+                greetingAlert.classList.remove('hidden');
+            }
+        });
     }
 
     // Bind API button clicks
@@ -86,4 +101,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Refresh every 30 seconds
     setInterval(loadStatus, 30000);
 });
-

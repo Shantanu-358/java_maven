@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -18,10 +17,26 @@ public class ApiController {
 
     private final long startTime = System.currentTimeMillis();
 
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getApiIndex() {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("message", "Welcome to Cloud Demo API v2.0");
+        response.put("endpoints", Map.of(
+            "dashboard", "/",
+            "status", "/api/status",
+            "health", "/api/health",
+            "greet", "/api/greet?name={yourName}",
+            "actuatorHealth", "/actuator/health"
+        ));
+        response.put("timestamp", Instant.now().toString());
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> getHealth() {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", "UP");
+        response.put("version", "2.0.0");
         response.put("timestamp", Instant.now().toString());
         return ResponseEntity.ok(response);
     }
@@ -41,8 +56,9 @@ public class ApiController {
         }
 
         response.put("application", "Cloud Demo Java App");
-        response.put("version", "1.0.0");
-        response.put("environment", "AWS EC2 Linux");
+        response.put("version", "2.0.0");
+        response.put("pipelineStatus", "Automated CI/CD via Jenkins");
+        response.put("environment", "AWS EC2 Ubuntu (Build Agent)");
         response.put("hostname", hostname);
         response.put("os", System.getProperty("os.name") + " " + System.getProperty("os.version"));
         response.put("javaVersion", System.getProperty("java.version"));
@@ -61,9 +77,10 @@ public class ApiController {
     }
 
     @GetMapping("/greet")
-    public ResponseEntity<Map<String, String>> greet(@RequestParam(defaultValue = "DevOps Engineer") String name) {
+    public ResponseEntity<Map<String, String>> greet(@RequestParam(defaultValue = "Shantanu") String name) {
         Map<String, String> response = new LinkedHashMap<>();
-        response.put("message", "Hello " + name + "! Welcome to your live Java app on AWS EC2.");
+        response.put("message", "?? Hello " + name + "! Your CI/CD pipeline deployment to AWS EC2 was 100% successful.");
+        response.put("version", "2.0.0");
         response.put("timestamp", Instant.now().toString());
         return ResponseEntity.ok(response);
     }
