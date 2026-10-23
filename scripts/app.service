@@ -3,8 +3,8 @@ Description=Cloud Demo Java Spring Boot Application
 After=syslog.target network.target
 
 [Service]
-# On Amazon Linux use: ec2-user, on Ubuntu use: ubuntu
-User=ec2-user
+# User running the service on Ubuntu
+User=ubuntu
 WorkingDirectory=/opt/cloud-demo
 
 # Grants permission to bind to privileged port 80 without running as root
