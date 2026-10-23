@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'agent'
+        }
+    }
 
     environment {
         APP_NAME = 'cloud-demo-app'
